@@ -109,23 +109,19 @@ const parsePackets = packets => {
       speedKPH: packets.readFloatLE(8),
       speedMPH: packets.readFloatLE(12),
       speedMPS: packets.readFloatLE(16),
-
       absEnabled: packets.readInt8(20),
       absActive: packets.readInt8(21),
       tcEnabled: packets.readInt8(23),
       tcActive: packets.readInt8(22),
       inPit: packets.readInt8(24),
       engineLimitedOn: packets.readInt8(25),
-
       accelerationGVertical: packets.readFloatLE(28),
       accelerationGHorizontal: packets.readFloatLE(32),
       accelerationGFrontal: packets.readFloatLE(36),
-
       currentLap: packets.readInt32LE(40),
       lastLap: packets.readInt32LE(44),
       bestLap: packets.readInt32LE(48),
       laps: packets.readInt32LE(52),
-
       gas: packets.readFloatLE(56),
       brake: packets.readFloatLE(60),
       clutch: packets.readFloatLE(64),
@@ -133,12 +129,10 @@ const parsePackets = packets => {
       steering: packets.readFloatLE(72),
       gear: packets.readInt32LE(76),
       cgHeight: packets.readFloatLE(80),
-
       wheelAngularSpdFL: packets.readFloatLE(84),
       wheelAngularSpdFR: packets.readFloatLE(88),
       wheelAngularSpdRL: packets.readFloatLE(92),
       wheelAngularSpdRR: packets.readFloatLE(96),
-
       slipAngleFL: packets.readFloatLE(100),
       slipAngleFR: packets.readFloatLE(104),
       slipAngleRL: packets.readFloatLE(108),
@@ -151,22 +145,18 @@ const parsePackets = packets => {
       slipRatioFR: packets.readFloatLE(136),
       slipRatioRL: packets.readFloatLE(140),
       slipRatioRR: packets.readFloatLE(144),
-
       tireSlipFL: packets.readFloatLE(148),
       tireSlipFR: packets.readFloatLE(152),
       tireSlipRL: packets.readFloatLE(156),
       tireSlipRR: packets.readFloatLE(160),
-
       ndSlipFL: packets.readFloatLE(164),
       ndSlipFR: packets.readFloatLE(168),
       ndSlipRL: packets.readFloatLE(172),
       ndSlipRR: packets.readFloatLE(176),
-
       loadFL: packets.readFloatLE(180),
       loadFR: packets.readFloatLE(184),
       loadRL: packets.readFloatLE(188),
       loadRR: packets.readFloatLE(192),
-
       DyFL: packets.readFloatLE(196),
       DyFR: packets.readFloatLE(200),
       DyRL: packets.readFloatLE(204),
@@ -175,17 +165,14 @@ const parsePackets = packets => {
       MxFR: packets.readFloatLE(216),
       MxRL: packets.readFloatLE(220),
       MxRR: packets.readFloatLE(224),
-
       tireDirtyLevelFL: packets.readFloatLE(228),
       tireDirtyLevelFR: packets.readFloatLE(232),
       tireDirtyLevelRL: packets.readFloatLE(236),
       tireDirtyLevelRR: packets.readFloatLE(240),
-
       camberRADFL: packets.readFloatLE(244),
       camberRADFR: packets.readFloatLE(248),
       camberRADRL: packets.readFloatLE(252),
       camberRADRR: packets.readFloatLE(256),
-
       tireRadiusFL: packets.readFloatLE(260),
       tireRadiusFR: packets.readFloatLE(264),
       tireRadiusRL: packets.readFloatLE(268),
@@ -194,18 +181,15 @@ const parsePackets = packets => {
       tireLoadedRadiusFR: packets.readFloatLE(280),
       tireLoadedRadiusRL: packets.readFloatLE(284),
       tireLoadedRadiusRR: packets.readFloatLE(288),
-
       suspensionHeightFL: packets.readFloatLE(292),
       suspensionHeightFR: packets.readFloatLE(296),
       suspensionHeightRL: packets.readFloatLE(300),
       suspensionHeightRR: packets.readFloatLE(304),
-
       carPosNormalized: packets.readFloatLE(308),
       carSlope: packets.readFloatLE(312),
-
       carCoordinatesX: packets.readFloatLE(316),
       carCoordinatesY: packets.readFloatLE(320),
-      carCoordinatesZ: packets.readFloatLE(324)
+      carCoordinatesZ: packets.readFloatLE(324),
    }
 }
 
