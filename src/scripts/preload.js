@@ -6,15 +6,11 @@ const server = dgram.createSocket('udp4');
 const HOST = '127.0.0.1';
 const PORT = 9996;
 
-
-
 // operation ids
 const HANDSHAKE = 0;
 const SUBSCRIBE_UPDATE = 1;
 const SUBSCRIBE_SPOT = 2;
 const DISMISS = 3;
-
-
 
 // set local time and date
 const prefs = { hour: '2-digit', minute: '2-digit' }
@@ -34,8 +30,6 @@ setInterval(function () {
    dateContainer.innerHTML = date;
    timeContainer.innerHTML = time.replace(/^0+/, '');
 }, 1000);
-
-
 
 const HEADERS_PATH = path.join(__dirname, '../constants', 'headers.txt');
 const HEADERS = fs.readFileSync(HEADERS_PATH, 'utf-8');
@@ -73,8 +67,6 @@ const stopRecording = () => {
    RACE_DATA = '';
 }
 
-
-
 // utility functions
 // const readString = (buffer, start, length) => {
 //    let string = buffer.toString('binary', start, start + length);
@@ -101,8 +93,6 @@ const stopSession = () => {
 
 const requestSessionInfo = () => {
 }
-
-
 
 const parsePackets = packets => {
    return {
@@ -211,8 +201,6 @@ const parsePackets = packets => {
 
 const populateRenderer = data => {
 }
-
-
 
 startSession();
 
