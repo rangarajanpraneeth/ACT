@@ -19,16 +19,23 @@ def graph2D(filePath, colorProperty, graphType):
         plt.axis("equal")
         plt.axis("off")
 
-        plt.scatter(
-            dataFrame["carPositionX"],
-            dataFrame["carPositionZ"],
-            c=dataFrame[colorProperty],
-            cmap=cmap,
-        )
+        if colorProperty == "":
+            plt.scatter(
+                dataFrame["carCoordinatesX"],
+                dataFrame["carCoordinatesZ"],
+                cmap=cmap,
+            )
+        else:
+            plt.scatter(
+                dataFrame["carCoordinatesX"],
+                dataFrame["carCoordinatesZ"],
+                c=dataFrame[colorProperty],
+                cmap=cmap,
+            )
 
         cb = plt.colorbar(label=colorProperty)
 
-        if colorProperty == "inputGear":
+        if colorProperty == "gear":
             cb.locator = MaxNLocator(integer=True)
             cb.update_ticks()
     elif graphType == "time":
@@ -40,7 +47,7 @@ def graph2D(filePath, colorProperty, graphType):
         )
         cb = plt.colorbar(label=colorProperty)
 
-        if colorProperty == "inputGear":
+        if colorProperty == "gear":
             cb.locator = MaxNLocator(integer=True)
             cb.update_ticks()
     elif graphType == "3d":
@@ -60,9 +67,9 @@ def graph2D(filePath, colorProperty, graphType):
         ax.zaxis.set_pane_color((0, 0, 0))
 
         ax.scatter(
-            dataFrame["carPositionX"],
-            dataFrame["carPositionZ"],
-            dataFrame["carPositionY"],
+            dataFrame["carCoordinatesX"],
+            dataFrame["carCoordinatesZ"],
+            dataFrame["carCoordinatesY"],
             c=dataFrame[colorProperty],
             cmap=cmap,
         )
@@ -71,4 +78,5 @@ def graph2D(filePath, colorProperty, graphType):
     plt.show()
 
 
-graph2D("1706588888204.csv", "carSpeed", "space")
+graph2D("1719374913231.csv", "speedKPH", "3d")
+# graph2D("1719344123291.csv", "speedKPH", "space")
