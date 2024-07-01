@@ -184,6 +184,7 @@ const parsePackets = packets => {
 }
 
 const populateRenderer = data => {
+   speedCont = document.querySelector('speed').innerHTMl = data.speedKPH;
 }
 
 startSession();
