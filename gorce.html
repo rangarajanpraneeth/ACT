@@ -1,70 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dynamic Circular Graph with Random Values</title>
-  <style>
-    .graph {
-      width: 300px;
-      height: 300px;
-    }
-    .axis {
-      stroke: #ccc;
-    }
-    .positive {
-      fill: green;
-    }
-    .negative {
-      fill: red;
-    }
-  </style>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Dynamic Circular Graph with Random Values</title>
+   <style>
+      .graph {
+         width: 300px;
+         height: 300px;
+      }
+
+      .axis {
+         stroke: #ccc;
+      }
+
+      .positive {
+         fill: green;
+      }
+
+      .negative {
+         fill: red;
+      }
+   </style>
 </head>
+
 <body>
-  <svg class="graph" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" id="graph">
-    <!-- Circle outline -->
-    <circle cx="150" cy="150" r="100" fill="none" stroke="#ccc" stroke-width="2"/>
-    
-    <!-- X and Y axes -->
-    <line x1="50" y1="150" x2="250" y2="150" class="axis"/>
-    <line x1="150" y1="50" x2="150" y2="250" class="axis"/>
-  </svg>
+   <svg class="graph" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" id="graph">
+      <!-- Circle outline -->
+      <circle cx="150" cy="150" r="100" fill="none" stroke="#ccc" stroke-width="2" />
 
-  <script>
-    function getRandomInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+      <!-- X and Y axes -->
+      <line x1="50" y1="150" x2="250" y2="150" class="axis" />
+      <line x1="150" y1="50" x2="150" y2="250" class="axis" />
+   </svg>
 
-    function plotRandomValues() {
-      var svg = document.getElementById('graph');
-      
-      // Clear previous circles
-      while (svg.lastChild && svg.lastChild.tagName === 'circle') {
-        svg.removeChild(svg.lastChild);
+   <script>
+      function plotVals(ax, az) {
+         let svg = document.getElementById('graph');
+         // Remove previous circles
+         while (svg.lastChild && svg.lastChild.tagName === 'circle') {
+            svg.removeChild(svg.lastChild);
+         }
+         // Calculate circle position
+         let x = 150 + ax * 100; // Adjust scale if needed
+         let y = 150 - az * 100; // Adjust scale if needed
+
+         // Create circle element
+         let circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+         circle.setAttribute('cx', x);
+         circle.setAttribute('cy', y);
+         circle.setAttribute('r', 5); // Adjust radius as needed
+
+         // Determine color based on value
+         let colorClass = az >= 0.5 ? 'positive' : 'negative';
+         circle.setAttribute('class', colorClass); // Apply color class
+
+         // Append circle to SVG
+         svg.appendChild(circle);
       }
-      
-      // Generate and plot random values
-      for (var i = 0; i < 10; i++) { // Adjust the number of points as needed
-        var randomValue = getRandomInt(-100, 100); // Generate random value
-        var colorClass = randomValue < 0 ? 'negative' : 'positive'; // Determine color class
 
-        // Calculate coordinates for the circle based on random value
-        var cx = 150 + randomValue / 100 * 100; // Adjust scale and center point as needed
-        var cy = 150 - Math.abs(randomValue) / 100 * 100; // Adjust scale and center point as needed
-        
-        // Create circle element
-        var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', cx);
-        circle.setAttribute('cy', cy);
-        circle.setAttribute('r', 5); // Adjust radius as needed
-        circle.setAttribute('class', colorClass); // Apply color class
-        svg.appendChild(circle); // Append circle to SVG
-      }
-    }
-
-    // Plot random values initially
-    plotRandomValues();
-  </script>
+      // Example call to plotVals with random values
+      setInterval(function() {
+         let ax = Math.random(); // Example random value for acceleration x-axis
+         let az = Math.random(); // Example random value for acceleration z-axis
+         plotVals(ax, az);
+      }, 1000); // Update every second
+   </script>
 </body>
-</html>
 
+</html>
