@@ -69,6 +69,17 @@ body {
 
 .dashboard {
    background-color: #23272e;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-around;
+}
+
+.speed {
+   width: 100%;
+   /* display: flex; */
+   /* align-items: center; */
+   text-align: center;
+   font-size: 5rem;
 }
 
 .extend {

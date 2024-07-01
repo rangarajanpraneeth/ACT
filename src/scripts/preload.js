@@ -184,7 +184,8 @@ const parsePackets = packets => {
 }
 
 const populateRenderer = data => {
-   speedCont = document.querySelector('.speed').innerHTMl = data.speedKPH;
+   document.querySelector('.speed').innerText = Math.round(data.speedKPH);
+   // console.log(document.querySelector('.speed').innerText)
 }
 
 startSession();
@@ -202,6 +203,8 @@ server.on('message', packets => {
    data = parsePackets(packets);
    if (RECORDING) RACE_DATA += `\n${Object.values(data).join(',')}`;
    console.log(data.speedKPH);
+
+   populateRenderer(data)
    // }
 });
 
