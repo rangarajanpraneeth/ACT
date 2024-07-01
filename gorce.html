@@ -15,12 +15,8 @@
          stroke: #ccc;
       }
 
-      .green {
-         fill: green;
-      }
-
-      .red {
-         fill: red;
+      .dot {
+         transition: opacity 0.5s ease-out; /* Smooth fade out */
       }
    </style>
 </head>
@@ -39,52 +35,48 @@
    </svg>
    <div class="gForce"></div>
    <script>
-      function valueToColor(value) {
-         value = value * 255;
-         return 'rgb(' + value + ',' + (255 - value) + ',' + 0 + ')';
-      }
+      function plotVals(ax, ay, az, multiplier = 1) {
+         let gForce = Math.sqrt(ax * ax + ay * ay + az * az) * multiplier;
+         document.querySelector('.gForce').innerText = gForce.toFixed(2);
 
-      function plotVals(ax, az) {
          let svg = document.getElementById('graph');
 
-         // Remove previous line and dot
-         while (svg.lastChild && svg.lastChild.tagName === 'circle') {
-            svg.removeChild(svg.lastChild);
+         // Fade out previous dot
+         let previousDot = svg.querySelector('.dot');
+         if (previousDot) {
+            previousDot.style.opacity = 0;
+            setTimeout(() => {
+               svg.removeChild(previousDot);
+            }, 500); // Wait for fade out transition (0.5s)
          }
+
          let x = 150 + ax * 100;
          let y = 150 - az * 100;
 
-         // Create new dot
          let circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
          circle.setAttribute('cx', x);
          circle.setAttribute('cy', y);
          circle.setAttribute('r', 5);
-         circle.style.fill = valueToColor((ax + az) / 2);
+         circle.classList.add('dot');
+
+         gForce / (Math.sqrt(3) * multiplier) * 255
+
+         circle.style.fill = `rgb(${gForce / (Math.sqrt(3) * multiplier) * 255}, ${255 - gForce / (Math.sqrt(3) * multiplier) * 255}, 0)`;
+
          svg.appendChild(circle);
 
-         // Smooth transition animation for the line
+         // Smooth transition for the line
          let line = document.getElementById('line');
-         animateLine(line, 150, 150, x, y);
-      }
-
-      function animateLine(line, x1, y1, x2, y2) {
-         line.setAttribute('x1', x1);
-         line.setAttribute('y1', y1);
-         line.setAttribute('x2', x1);
-         line.setAttribute('y2', y1);
-
-         line.setAttribute('stroke', 'red');
-         line.setAttribute('stroke-width', '2');
-
-         line.setAttribute('x2', x2);
-         line.setAttribute('y2', y2);
+         line.setAttribute('x2', x);
+         line.setAttribute('y2', y);
       }
 
       setInterval(function () {
-         let ax = Math.random();
-         let az = Math.random();
-         plotVals(ax, az);
-      }, 1000); 
+         let ax = Math.random() * 2 - 1; // Random value between -1 and 1 for ax
+         let ay = Math.random() * 2 - 1; // Random value between -1 and 1 for ay
+         let az = Math.random() * 2 - 1; // Random value between -1 and 1 for az
+         plotVals(ax, ay, az);
+      }, 1000); // Update every second
    </script>
 </body>
 

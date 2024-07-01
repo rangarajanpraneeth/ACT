@@ -92,7 +92,21 @@
       <div class="gauges">
          <div class="gauge">track map</div>
          <div class="gauge">track info</div>
-         <div class="gauge">g force</div>
+         <div class="gauge">g force
+            <svg class="graph" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" id="graph">
+               <!-- Circle outline -->
+               <circle cx="150" cy="150" r="100" fill="none" stroke="#ccc" stroke-width="2" />
+         
+               <!-- X and Y axes -->
+               <line x1="50" y1="150" x2="250" y2="150" class="axis" />
+               <line x1="150" y1="50" x2="150" y2="250" class="axis" />
+         
+               <!-- Line from center to dot -->
+               <line id="line" x1="150" y1="150" x2="150" y2="150" stroke="blue" stroke-width="2" />
+            </svg>
+            <div class="gForce"></div>    <!-- doesnt work --> 
+         </div>
+         
       </div>
       <div class="side__bar">
          <div class="menu">
@@ -117,6 +131,15 @@
    </div>
 
    <script src="../scripts/preload.js"></script>
+   <!-- testing code down here for g force -->
+   <script>
+      setInterval(function () {
+         let ax = Math.random() * 2 - 1;
+         let ay = Math.random() * 2 - 1;
+         let az = Math.random() * 2 - 1;
+         plotVals(ax, ay, az);
+      }, 1000); // Update every second
+   </script>
 </body>
 
 </html>

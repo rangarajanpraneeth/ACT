@@ -220,6 +220,7 @@ const populateRenderer = (data) => {
    // document.querySelector('.speed').innerText = Math.round(data.carSpeed);
    // moveNeedle(data.engineIdleRPM, data.engineMaxRPM, data.carSpeed);
    moveNeedle(data.engineRPM, data.engineMaxRPM, data.carSpeed);
+   plotVals(data.carAccelerationX, data.carAccelerationY, data.carAccelerationZ);
 
    document.querySelector('.fl').innerText = Math.round(data.tireTemperatureFL);
    document.querySelector('.fr').innerText = Math.round(data.tireTemperatureFR);
@@ -243,3 +244,40 @@ process.on('SIGINT', () => {
    console.log(`Exiting...`);
    process.exit();
 });
+
+
+function plotVals(ax, ay, az, multiplier = 1) {
+   let gForce = Math.sqrt(ax * ax + ay * ay + az * az) * multiplier;
+   document.querySelector('.gForce').innerText = gForce.toFixed(2);
+
+   let svg = document.getElementById('graph');
+
+   // Fade out previous dot
+   let previousDot = svg.querySelector('.dot');
+   if (previousDot) {
+      previousDot.style.opacity = 0;
+      setTimeout(() => {
+         svg.removeChild(previousDot);
+      }, 500); // Wait for fade out transition (0.5s)
+   }
+
+   let x = 150 + ax * 100;
+   let y = 150 - az * 100;
+
+   let circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+   circle.setAttribute('cx', x);
+   circle.setAttribute('cy', y);
+   circle.setAttribute('r', 5);
+   circle.classList.add('dot');
+
+   gForce / (Math.sqrt(3) * multiplier) * 255
+
+   circle.style.fill = `rgb(${gForce / (Math.sqrt(3) * multiplier) * 255}, ${255 - gForce / (Math.sqrt(3) * multiplier) * 255}, 0)`;
+
+   svg.appendChild(circle);
+
+   // Smooth transition for the line
+   let line = document.getElementById('line');
+   line.setAttribute('x2', x);
+   line.setAttribute('y2', y);
+}
