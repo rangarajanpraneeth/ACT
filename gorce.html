@@ -15,11 +15,11 @@
          stroke: #ccc;
       }
 
-      .positive {
+      .green {
          fill: green;
       }
 
-      .negative {
+      .red {
          fill: red;
       }
    </style>
@@ -33,39 +33,58 @@
       <!-- X and Y axes -->
       <line x1="50" y1="150" x2="250" y2="150" class="axis" />
       <line x1="150" y1="50" x2="150" y2="250" class="axis" />
-   </svg>
 
+      <!-- Line from center to dot -->
+      <line id="line" x1="150" y1="150" x2="150" y2="150" stroke="blue" stroke-width="2" />
+   </svg>
+   <div class="gForce"></div>
    <script>
+      function valueToColor(value) {
+         value = value * 255;
+         return 'rgb(' + value + ',' + (255 - value) + ',' + 0 + ')';
+      }
+
       function plotVals(ax, az) {
          let svg = document.getElementById('graph');
-         // Remove previous circles
+
+         // Remove previous line and dot
          while (svg.lastChild && svg.lastChild.tagName === 'circle') {
             svg.removeChild(svg.lastChild);
          }
-         // Calculate circle position
-         let x = 150 + ax * 100; // Adjust scale if needed
-         let y = 150 - az * 100; // Adjust scale if needed
+         let x = 150 + ax * 100;
+         let y = 150 - az * 100;
 
-         // Create circle element
+         // Create new dot
          let circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
          circle.setAttribute('cx', x);
          circle.setAttribute('cy', y);
-         circle.setAttribute('r', 5); // Adjust radius as needed
-
-         // Determine color based on value
-         let colorClass = az >= 0.5 ? 'positive' : 'negative';
-         circle.setAttribute('class', colorClass); // Apply color class
-
-         // Append circle to SVG
+         circle.setAttribute('r', 5);
+         circle.style.fill = valueToColor((ax + az) / 2);
          svg.appendChild(circle);
+
+         // Smooth transition animation for the line
+         let line = document.getElementById('line');
+         animateLine(line, 150, 150, x, y);
       }
 
-      // Example call to plotVals with random values
-      setInterval(function() {
-         let ax = Math.random(); // Example random value for acceleration x-axis
-         let az = Math.random(); // Example random value for acceleration z-axis
+      function animateLine(line, x1, y1, x2, y2) {
+         line.setAttribute('x1', x1);
+         line.setAttribute('y1', y1);
+         line.setAttribute('x2', x1);
+         line.setAttribute('y2', y1);
+
+         line.setAttribute('stroke', 'red');
+         line.setAttribute('stroke-width', '2');
+
+         line.setAttribute('x2', x2);
+         line.setAttribute('y2', y2);
+      }
+
+      setInterval(function () {
+         let ax = Math.random();
+         let az = Math.random();
          plotVals(ax, az);
-      }, 1000); // Update every second
+      }, 1000); 
    </script>
 </body>
 
