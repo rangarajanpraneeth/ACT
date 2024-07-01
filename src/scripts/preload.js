@@ -1,16 +1,24 @@
 const fs = require('fs');
 const path = require('path');
 const dgram = require('dgram');
-const server = dgram.createSocket('udp4');
-// server information
-const HOST = '127.0.0.1';
-const PORT = 9996;
+let server = dgram.createSocket('udp4');
 
-// operation ids
-const HANDSHAKE = 0;
-const SUBSCRIBE_UPDATE = 1;
-const SUBSCRIBE_SPOT = 2;
-const DISMISS = 3;
+const PORT = 2693;
+const HOST = '127.0.0.1';
+
+// recording related variables
+const HEADERS_PATH = path.join(__dirname, './constants', 'headers.txt');
+const HEADERS = fs.readFileSync(HEADERS_PATH, 'utf-8');
+let RECORDING = false;
+let RACE_DATA = '';
+
+const {
+   IDs,
+   classes,
+   drivetrains
+} = require('./constants/constants')
+
+
 
 // set local time and date
 const prefs = { hour: '2-digit', minute: '2-digit' }
@@ -31,10 +39,12 @@ setInterval(function () {
    timeContainer.innerHTML = time.replace(/^0+/, '');
 }, 1000);
 
-const HEADERS_PATH = path.join(__dirname, '../constants', 'headers.txt');
-const HEADERS = fs.readFileSync(HEADERS_PATH, 'utf-8');
-let RECORDING = false;
-let RACE_DATA = '';
+
+
+// global utility functions
+const fToC = f => (f - 32) * 5 / 9;
+
+
 
 // recording functions
 const startRecording = () => {
@@ -58,7 +68,7 @@ const stopRecording = () => {
    RECORDING = false;
 
    const fileName = String(Date.now());
-   const filePath = path.join(__dirname, '../data', `${fileName}.csv`);
+   const filePath = path.join(__dirname, './data', `${fileName}.csv`);
    fs.writeFileSync(filePath, HEADERS + RACE_DATA, {
       encoding: 'utf-8',
       flag: 'w'
@@ -67,149 +77,150 @@ const stopRecording = () => {
    RACE_DATA = '';
 }
 
-// utility functions
-// const readString = (buffer, start, length) => {
-//    let string = buffer.toString('binary', start, start + length);
-//    let tokens = string.split('%');
-//    return tokens[0];
-// }
-
-const send = operation => {
-   let message = new Buffer.alloc(12);
-   message.writeInt32LE(1, 0);
-   message.writeInt32LE(1, 4);
-   message.writeInt32LE(operation, 8);
-   server.send(message, 0, message.length, PORT, HOST);
-}
-
-const startSession = () => {
-   send(HANDSHAKE);
-   send(SUBSCRIBE_UPDATE);
-}
-
-const stopSession = () => {
-   send(DISMISS);
-}
-
-const requestSessionInfo = () => {
-}
-
 const parsePackets = packets => {
    return {
-      speedKPH: packets.readFloatLE(8),
-      speedMPH: packets.readFloatLE(12),
-      speedMPS: packets.readFloatLE(16),
-      absEnabled: packets.readInt8(20),
-      absActive: packets.readInt8(21),
-      tcEnabled: packets.readInt8(23),
-      tcActive: packets.readInt8(22),
-      inPit: packets.readInt8(24),
-      engineLimitedOn: packets.readInt8(25),
-      accelerationGVertical: packets.readFloatLE(28),
-      accelerationGHorizontal: packets.readFloatLE(32),
-      accelerationGFrontal: packets.readFloatLE(36),
-      currentLap: packets.readInt32LE(40),
-      lastLap: packets.readInt32LE(44),
-      bestLap: packets.readInt32LE(48),
-      laps: packets.readInt32LE(52),
-      gas: packets.readFloatLE(56),
-      brake: packets.readFloatLE(60),
-      clutch: packets.readFloatLE(64),
-      engineRPM: packets.readFloatLE(68),
-      steering: packets.readFloatLE(72),
-      gear: packets.readInt32LE(76),
-      cgHeight: packets.readFloatLE(80),
-      wheelAngularSpdFL: packets.readFloatLE(84),
-      wheelAngularSpdFR: packets.readFloatLE(88),
-      wheelAngularSpdRL: packets.readFloatLE(92),
-      wheelAngularSpdRR: packets.readFloatLE(96),
-      slipAngleFL: packets.readFloatLE(100),
-      slipAngleFR: packets.readFloatLE(104),
-      slipAngleRL: packets.readFloatLE(108),
-      slipAngleRR: packets.readFloatLE(112),
-      slipAngleConatctPatchFL: packets.readFloatLE(116),
-      slipAngleConatctPatchFR: packets.readFloatLE(120),
-      slipAngleConatctPatchRL: packets.readFloatLE(124),
-      slipAngleConatctPatchRR: packets.readFloatLE(128),
-      slipRatioFL: packets.readFloatLE(132),
-      slipRatioFR: packets.readFloatLE(136),
-      slipRatioRL: packets.readFloatLE(140),
-      slipRatioRR: packets.readFloatLE(144),
-      tireSlipFL: packets.readFloatLE(148),
-      tireSlipFR: packets.readFloatLE(152),
-      tireSlipRL: packets.readFloatLE(156),
-      tireSlipRR: packets.readFloatLE(160),
-      ndSlipFL: packets.readFloatLE(164),
-      ndSlipFR: packets.readFloatLE(168),
-      ndSlipRL: packets.readFloatLE(172),
-      ndSlipRR: packets.readFloatLE(176),
-      loadFL: packets.readFloatLE(180),
-      loadFR: packets.readFloatLE(184),
-      loadRL: packets.readFloatLE(188),
-      loadRR: packets.readFloatLE(192),
-      DyFL: packets.readFloatLE(196),
-      DyFR: packets.readFloatLE(200),
-      DyRL: packets.readFloatLE(204),
-      DyRR: packets.readFloatLE(208),
-      MxFL: packets.readFloatLE(212),
-      MxFR: packets.readFloatLE(216),
-      MxRL: packets.readFloatLE(220),
-      MxRR: packets.readFloatLE(224),
-      tireDirtyLevelFL: packets.readFloatLE(228),
-      tireDirtyLevelFR: packets.readFloatLE(232),
-      tireDirtyLevelRL: packets.readFloatLE(236),
-      tireDirtyLevelRR: packets.readFloatLE(240),
-      camberRADFL: packets.readFloatLE(244),
-      camberRADFR: packets.readFloatLE(248),
-      camberRADRL: packets.readFloatLE(252),
-      camberRADRR: packets.readFloatLE(256),
-      tireRadiusFL: packets.readFloatLE(260),
-      tireRadiusFR: packets.readFloatLE(264),
-      tireRadiusRL: packets.readFloatLE(268),
-      tireRadiusRR: packets.readFloatLE(272),
-      tireLoadedRadiusFL: packets.readFloatLE(276),
-      tireLoadedRadiusFR: packets.readFloatLE(280),
-      tireLoadedRadiusRL: packets.readFloatLE(284),
-      tireLoadedRadiusRR: packets.readFloatLE(288),
-      suspensionHeightFL: packets.readFloatLE(292),
-      suspensionHeightFR: packets.readFloatLE(296),
-      suspensionHeightRL: packets.readFloatLE(300),
-      suspensionHeightRR: packets.readFloatLE(304),
-      carPosNormalized: packets.readFloatLE(308),
-      carSlope: packets.readFloatLE(312),
-      carCoordinatesX: packets.readFloatLE(316),
-      carCoordinatesY: packets.readFloatLE(320),
-      carCoordinatesZ: packets.readFloatLE(324),
+      inRace: packets.readInt32LE(0), // 1 in race 0 not in race
+      timestamp: packets.readInt32LE(4), // can overflow to 0 eventually
+
+      engineMaxRPM: packets.readFloatLE(8),
+      engineIdleRPM: packets.readFloatLE(12),
+      engineRPM: packets.readFloatLE(16),
+
+      carAccelerationX: packets.readFloatLE(20), // X=left/right Y=up Z=forward
+      carAccelerationY: packets.readFloatLE(24),
+      carAccelerationZ: packets.readFloatLE(28),
+
+      carVelocityX: packets.readFloatLE(32), // X=left/right Y=up Z=forward
+      carVelocityY: packets.readFloatLE(36),
+      carVelocityZ: packets.readFloatLE(40),
+
+      carAngularVelocityX: packets.readFloatLE(44), // X=left/right Y=up Z=forward
+      carAngularVelocityY: packets.readFloatLE(48),
+      carAngularVelocityZ: packets.readFloatLE(52),
+
+      carYaw: packets.readFloatLE(54),
+      carPitch: packets.readFloatLE(60),
+      carRoll: packets.readFloatLE(64),
+
+      suspensionTravelNormalizedFL: packets.readFloatLE(68), // 0.0f=max stretch 1.0=max compression
+      suspensionTravelNormalizedFR: packets.readFloatLE(72),
+      suspensionTravelNormalizedRL: packets.readFloatLE(76),
+      suspensionTravelNormalizedRR: packets.readFloatLE(80),
+
+      tireSlipRatioFL: packets.readFloatLE(84), // 0(100% grip) |ratio| > 1 (loss of grip)
+      tireSlipRatioFR: packets.readFloatLE(88),
+      tireSlipRatioRL: packets.readFloatLE(92),
+      tireSlipRatioRR: packets.readFloatLE(96),
+
+      wheelRotationSpeedFL: packets.readFloatLE(100), // radians per second
+      wheelRotationSpeedFR: packets.readFloatLE(104),
+      wheelRotationSpeedRL: packets.readFloatLE(108),
+      wheelRotationSpeedRR: packets.readFloatLE(112),
+
+      wheelOnRumbleFL: packets.readInt32LE(116), // 1(true) 0(false)
+      wheelOnRumbleFR: packets.readInt32LE(120),
+      wheelOnRumbleRL: packets.readInt32LE(124),
+      wheelOnRumbleRR: packets.readInt32LE(128),
+
+      wheelInPuddleDepthFL: packets.readFloatLE(132), // 0(shallowest) 1(deepest)
+      wheelInPuddleDepthFR: packets.readFloatLE(136),
+      wheelInPuddleDepthRL: packets.readFloatLE(140),
+      wheelInPuddleDepthRR: packets.readFloatLE(144),
+
+      forceFeedbackRumbleFL: packets.readFloatLE(148),
+      forceFeedbackRumbleFR: packets.readFloatLE(152),
+      forceFeedbackRumbleRL: packets.readFloatLE(156),
+      forceFeedbackRumbleRR: packets.readFloatLE(160),
+
+      tireSlipAngleFL: packets.readFloatLE(164), // 0(100% grip) |angle| > 1 (loss of grip)
+      tireSlipAngleFR: packets.readFloatLE(168),
+      tireSlipAngleRL: packets.readFloatLE(172),
+      tireSlipAngleRR: packets.readFloatLE(176),
+
+      tireSlipCombinedFL: packets.readFloatLE(180), // 0(100% grip) |slip| > 1 (loss of grip)
+      tireSlipCombinedFR: packets.readFloatLE(184),
+      tireSlipCombinedRL: packets.readFloatLE(188),
+      tireSlipCombinedRR: packets.readFloatLE(192),
+
+      suspensionTravelFL: packets.readFloatLE(196), // meters
+      suspensionTravelFR: packets.readFloatLE(200),
+      suspensionTravelRL: packets.readFloatLE(204),
+      suspensionTravelRR: packets.readFloatLE(208),
+
+      carID: packets.readInt32LE(212),
+      carPerformanceClass: packets.readInt32LE(216), // 0(D)-7(X)
+      carPerformanceIndex: packets.readInt32LE(220), // 100-999
+      carDrivetrainType: packets.readInt32LE(224), // 0=FWD 1=RWD 2=AWD
+      carCylinderCount: packets.readInt32LE(228),
+
+      carPositionX: packets.readFloatLE(244),
+      carPositionY: packets.readFloatLE(248),
+      carPositionZ: packets.readFloatLE(252),
+
+      carSpeed: Math.round(packets.readFloatLE(256) * 2.237), // meters per second
+      enginePower: packets.readFloatLE(260) / 745.7, // watts
+      engineTorque: packets.readFloatLE(264) / 1.356, // newton meters
+
+      tireTemperatureFL: fToC(packets.readFloatLE(268)), // farenheit
+      tireTemperatureFR: fToC(packets.readFloatLE(272)),
+      tireTemperatureRL: fToC(packets.readFloatLE(276)),
+      tireTemperatureRR: fToC(packets.readFloatLE(280)),
+
+      engineBoost: packets.readFloatLE(284),
+      engineFuel: packets.readFloatLE(288),
+
+      distanceTravelled: packets.readFloatLE(292),
+
+      raceBestLap: packets.readFloatLE(296),
+      raceLastLap: packets.readFloatLE(300),
+      raceCurrentLap: packets.readFloatLE(304),
+      raceTime: packets.readFloatLE(308),
+      raceLap: packets.readUint16LE(312),
+      racePosition: packets.readUintLE(314, 1),
+
+      inputThrottle: packets.readUintLE(315, 1),
+      inputBrake: packets.readUintLE(316, 1),
+      inputClutch: packets.readUintLE(317, 1),
+      inputHandbrake: packets.readUintLE(318, 1),
+      inputGear: packets.readUintLE(319, 1),
+      inputSteering: packets.readIntLE(320, 1),
+
+      normalizedDrivingLine: packets.readIntLE(321, 1),
+      normalizedAIBrakeDifference: packets.readInt16LE(322)
    }
 }
 
-const populateRenderer = data => {
-   document.querySelector('.speed').innerText = Math.round(data.speedKPH);
-   // console.log(document.querySelector('.speed').innerText)
+server.on('listening', () => {
+   let address = server.address();
+   console.log(`Listening on ${address.address}:${address.port}`);
+});
+
+// display function
+const populateRenderer = (data) => {
+   // if (data.inRace === 0) {
+   //    document.querySelector('.status').classList.remove('green');
+   //    document.querySelector('.status').classList.add('red');
+   //    document.querySelector('.status').innerHTML = 'INACTIVE'
+   // } else if (data.inRace === 1) {
+   //    document.querySelector('.status').classList.remove('red');
+   //    document.querySelector('.status').classList.add('green');
+   //    document.querySelector('.status').innerHTML = 'ACTIVE'
+   // }
+
+   // document.querySelector('.id').innerHTML = IDs[data.carID];
+
+   document.querySelector('.speed').innerText = Math.round(data.carSpeed);
 }
 
-startSession();
-
-server.on('listening', () => {
-   console.log(`Listening: ${HOST}:${PORT}`);
-});
-
-// main update loop
 server.on('message', packets => {
-   // let carName = readString(packets, 0, 100);
-   // let driverName = readString(packets, 100, 100);
-
-   // if (state = 1) {
-   data = parsePackets(packets);
-   if (RECORDING) RACE_DATA += `\n${Object.values(data).join(',')}`;
-   console.log(data.speedKPH);
-
-   populateRenderer(data)
-   // }
+   const data = parsePackets(packets);
+   if (RECORDING && data.inRace === 1) RACE_DATA += `\n${Object.values(data).join(',')}`;
+   populateRenderer(data);
 });
+
+server.bind(PORT, HOST);
 
 process.on('SIGINT', () => {
-   stopSession();
-   console.log(`Terminating Session...`);
+   console.log(`Exiting...`);
    process.exit();
 });

@@ -82,6 +82,51 @@ body {
    font-size: 5rem;
 }
 
+.tires {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+}
+
+.tire__info {
+   display: flex;
+   flex-direction: column;
+   gap: .5rem;
+}
+
+.tire__numbers__bt {
+   display: flex;
+   justify-content: space-between;
+}
+
+.tire__container {
+   display: flex;
+   justify-content: space-between;
+}
+
+.tire {
+   display: flex;
+   gap: .5rem;
+}
+
+.tire__image {
+   width: 4rem;
+   height: 6rem;
+   background-color: #fff;
+   /* border: 1px solid white; */
+   border-radius: .5rem;
+}
+
+.numbers {
+   display: flex;
+   flex-direction: column;
+   gap: .5rem;
+}
+
+.bottom__nums {
+   justify-content: flex-end;
+}
+
 .extend {
    display: flex;
    flex-direction: column;
