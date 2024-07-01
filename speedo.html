@@ -76,14 +76,7 @@
 
    <script>
       // Function to move the needle based on index
-      function moveNeedle(currentRPM, maxRPM, speed) {
-         const degree = currentRPM/maxRPM * 180 - 90;
-         const needle = document.getElementById('needle');
-         // const degree = values[index % values.length]; // Get degree based on array and loop
-         needle.style.transform = `rotate(${degree}deg)`;
-         document.getElementById('riskLevel').innerText = speed;
-      }
-      moveNeedle(10, 100, 200);
+      
    </script>
 </body>
 

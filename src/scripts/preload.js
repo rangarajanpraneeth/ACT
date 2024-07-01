@@ -195,6 +195,14 @@ server.on('listening', () => {
    console.log(`Listening on ${address.address}:${address.port}`);
 });
 
+function moveNeedle(currentRPM, maxRPM, speed) {
+   const degree = currentRPM/maxRPM * 180 - 90;
+   const needle = document.getElementById('needle');
+   // const degree = values[index % values.length]; // Get degree based on array and loop
+   needle.style.transform = `rotate(${degree}deg)`;
+   document.getElementById('riskLevel').innerText = speed;
+}
+
 // display function
 const populateRenderer = (data) => {
    // if (data.inRace === 0) {
@@ -209,7 +217,18 @@ const populateRenderer = (data) => {
 
    // document.querySelector('.id').innerHTML = IDs[data.carID];
 
-   document.querySelector('.speed').innerText = Math.round(data.carSpeed);
+   // document.querySelector('.speed').innerText = Math.round(data.carSpeed);
+   // moveNeedle(data.engineIdleRPM, data.engineMaxRPM, data.carSpeed);
+   moveNeedle(data.engineRPM, data.engineMaxRPM, data.carSpeed);
+
+   document.querySelector('.fl').innerText = Math.round(data.tireTemperatureFL);
+   document.querySelector('.fr').innerText = Math.round(data.tireTemperatureFR);
+   document.querySelector('.rl').innerText = Math.round(data.tireTemperatureRL);
+   document.querySelector('.rr').innerText = Math.round(data.tireTemperatureRR);
+
+   // console.log(data.currentRPM);
+   // console.log(data.maxRPM);
+
 }
 
 server.on('message', packets => {
