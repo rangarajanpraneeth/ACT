@@ -7,16 +7,16 @@ const PORT = 2693;
 const HOST = '127.0.0.1';
 
 // recording related variables
-const HEADERS_PATH = path.join(__dirname, './constants', 'headers.txt');
+const HEADERS_PATH = path.join(__dirname, '../constants', 'headers.txt');
 const HEADERS = fs.readFileSync(HEADERS_PATH, 'utf-8');
 let RECORDING = false;
 let RACE_DATA = '';
 
-const {
-   IDs,
-   classes,
-   drivetrains
-} = require('./constants/constants')
+// const {
+//    IDs,
+//    classes,
+//    drivetrains
+// } = require('./constants/constants')
 
 
 
@@ -68,7 +68,7 @@ const stopRecording = () => {
    RECORDING = false;
 
    const fileName = String(Date.now());
-   const filePath = path.join(__dirname, './data', `${fileName}.csv`);
+   const filePath = path.join(__dirname, '../data', `${fileName}.csv`);
    fs.writeFileSync(filePath, HEADERS + RACE_DATA, {
       encoding: 'utf-8',
       flag: 'w'
