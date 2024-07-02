@@ -90,23 +90,25 @@
          </div>
       </div>
       <div class="gauges">
-         <div class="gauge">track map</div>
+         <div class="gauge">track map
+            <img id="plot" src="" alt="Matplotlib Plot">
+         </div>
          <div class="gauge">track info</div>
          <div class="gauge">g force
             <svg class="graph" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" id="graph">
                <!-- Circle outline -->
                <circle cx="150" cy="150" r="100" fill="none" stroke="#ccc" stroke-width="2" />
-         
+
                <!-- X and Y axes -->
                <line x1="50" y1="150" x2="250" y2="150" class="axis" />
                <line x1="150" y1="50" x2="150" y2="250" class="axis" />
-         
+
                <!-- Line from center to dot -->
                <line id="line" x1="150" y1="150" x2="150" y2="150" stroke="blue" stroke-width="2" />
             </svg>
-            <div class="gForce"></div>    <!-- doesnt work --> 
+            <div class="gForce"></div> <!-- doesnt work -->
          </div>
-         
+
       </div>
       <div class="side__bar">
          <div class="menu">
@@ -139,6 +141,16 @@
          let az = Math.random() * 2 - 1;
          plotVals(ax, ay, az);
       }, 1000); // Update every second
+
+      const plotImg = document.getElementById('plot');
+
+      // Fetch plot image from Python backend
+      fetch('http://localhost:5000/plot')
+         .then(response => response.blob())
+         .then(blob => {
+            plotImg.src = URL.createObjectURL(blob);
+         })
+         .catch(error => console.error('Error fetching plot:', error));
    </script>
 </body>
 
