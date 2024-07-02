@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>ACT</title>
+
+   <link rel="stylesheet" href="../styles/stylesheet.css">
+</head>
+
+<body>
+   <div class="renderer">
+      <div class="side__bar">
+         <div class="menu">
+            <div class="header"><span>LAPS</span></div>
+            <div class="content"></div>
+         </div>
+         <div class="menu">
+            <div class="header"><span>CHANNELS</span></div>
+            <div class="content"></div>
+         </div>
+         <div class="menu">
+            <div class="header"><span>PLUGINS</span></div>
+            <div class="content"></div>
+         </div>
+      </div>
+      <div class="gauges">
+         <div class="gauge">car info</div>
+         <div class="gauge">pedal/wheel inputs</div>
+         <div class="gauge tires">
+            <div class="tire__info">
+               <div class="tire__container">
+                  <div class="tire">
+                     <div class="tire__image"></div>
+                     <div class="numbers">
+                        <span>1</span>
+                        <span>1</span>
+                        <span>1</span>
+                     </div>
+                  </div>
+                  <div class="tire">
+                     <div class="numbers">
+                        <span>1</span>
+                        <span>1</span>
+                        <span>1</span>
+                     </div>
+                     <div class="tire__image"></div>
+                  </div>
+               </div>
+               <div class="tire__numbers__bt">
+                  <span class="fl">fl</span>
+                  <span class="fr">fr</span>
+               </div>
+            </div>
+            <div class="tire__info">
+               <div class="tire__numbers__bt">
+                  <span class="rl">rl</span>
+                  <span class="rr">rr</span>
+               </div>
+               <div class="tire__container">
+                  <div class="tire">
+                     <div class="tire__image"></div>
+                     <div class="numbers bottom__nums">
+                        <span>1</span>
+                        <span>1</span>
+                        <span>1</span>
+                     </div>
+                  </div>
+                  <div class="tire">
+                     <div class="numbers bottom__nums">
+                        <span>1</span>
+                        <span>1</span>
+                        <span>1</span>
+                     </div>
+                     <div class="tire__image"></div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="dashboard">
+         <!-- <div class="speed">123</div> -->
+         <div class="speedo">
+            <div class="needle" id="needle"></div>
+            <div class="gauge-center">
+               <div class="label"></div><br>
+               <div class="number" id="riskLevel">0</div>
+            </div>
+         </div>
+      </div>
+      <div class="gauges">
+         <div class="gauge">track map</div>
+         <div class="gauge">track info</div>
+         <div class="gauge">g force</div>
+      </div>
+      <div class="side__bar">
+         <div class="menu">
+            <div class="header"><span>SETTINGS</span></div>
+            <div class="content"></div>
+         </div>
+         <div class="menu">
+            <div class="header"><span>RECORDING</span></div>
+            <div class="content"></div>
+         </div>
+         <div class="menu">
+            <div class="header"><span>SESSION</span></div>
+            <div class="content extend">
+               <div></div>
+               <div class="line">
+                  <span class="local__date"></span>
+                  <span class="local__time"></span>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <script src="../scripts/preload.js"></script>
+</body>
+
+</html>
