@@ -180,3 +180,14 @@ body {
    flex-direction: column;
    justify-content: space-between;
 }
+
+/* g force stuff */
+.graph {
+   width: 300px;
+   height: 300px;
+}
+
+.axis {
+   stroke: #ccc;
+}
+/* g force stuff */
